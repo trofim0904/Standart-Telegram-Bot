@@ -14,10 +14,10 @@ namespace Corebot
         private static List<Command> _commands;
         static void Main(string[] args)
         {
-            //dotnet Corebot.dll -- 1131920122:AAFjNH3kiOA6wUrCu-cfycdprDXOP9GxdFk
+           
 
             _client = new TelegramBotClient(args[0]);
-            //_client = new TelegramBotClient("1131920122:AAFjNH3kiOA6wUrCu-cfycdprDXOP9GxdFk");
+            
 
             var me = _client.GetMeAsync().Result;
             Console.WriteLine("Bot name: " + me.FirstName);
@@ -27,13 +27,14 @@ namespace Corebot
                 new StartCommand(),
                 new TestCommand(),
                 new KillCommand(),
+                new ZerotwoCommand()
                 
             };
             _client.OnMessage += _client_OnMessage;
             _client.StartReceiving();
 
             Thread.Sleep(Timeout.Infinite);
-            Console.Read();
+  
 
 
         }
@@ -58,9 +59,7 @@ namespace Corebot
             }
             await _client.SendTextMessageAsync(chatId,"I don`t know what do you want to do");
 
-            //await _client.SendTextMessageAsync(chatId, "Ohayo");
-            //await _client.SendPhotoAsync(chatId, photo: "https://s.tcdn.co/3b6/1c4/3b61c4e8-695a-30c1-9fc9-78530479a8fb/12.png",
-            //    caption: "<b>Ohayo</b>", parseMode: ParseMode.Html);
+            
         }
     }
 }
