@@ -24,7 +24,7 @@ namespace Corebot
 
             #region Bot start
 
-            _client = new TelegramBotClient("1131920122:AAFjNH3kiOA6wUrCu-cfycdprDXOP9GxdFk");
+            _client = new TelegramBotClient(args[0]);
 
             var me = _client.GetMeAsync().Result;
             Console.WriteLine("Bot name: " + me.FirstName);
