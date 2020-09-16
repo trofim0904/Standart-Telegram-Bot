@@ -1,12 +1,8 @@
 ﻿using Corebot.Commands;
-using Corebot.DataBase;
-using Corebot.MemchedClasses;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using Telegram.Bot;
-using Telegram.Bot.Types.Enums;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Corebot
 {
@@ -18,75 +14,36 @@ namespace Corebot
         static void Main(string[] args)
         {
 
-            List<BotSticker> botStickers = new List<BotSticker>();
-            #region Data base 
-
-            using(ApplicationContext db = new ApplicationContext("localhost", "myuser", "myuser", "stickers"))//args[]
+            List<BotSticker> botStickers = new List<BotSticker>
             {
-                foreach(Sticker sticker in db.Stickers)
-                {
-                    
-                    if (sticker.BotId == 2/*args[]*/ || sticker.BotId == null)
-                    {
-                        botStickers.Add(Mapper.StickerToBotSticker(sticker));
-                    }
-                }
-
-            }
-
-            #endregion
-
-            #region Memched
-
-            var provider = ContainerConfiguration.Configure();
-
-            var cacheRepository = provider.GetService<ICacheRepository>();
-
-            foreach (BotSticker botSticker in botStickers)
-            {
-                cacheRepository.Set(botSticker.CommandName, botSticker.Url);
-            }
-
-
-            var cacheProvider = provider.GetService<ICacheProvider>();
-
-            foreach (BotSticker botSticker in botStickers)
-            {
-                Console.WriteLine($"Memched url: {cacheProvider.GetCache<string>(botSticker.CommandName)}");
-            }
-
-      
-
-            #endregion
+                new BotSticker() { CommandName = "hello", Url = "https://trofim0904.github.io/webp/hello.webp" },
+                new BotSticker() { CommandName = "start", Url = "https://trofim0904.github.io/webp/start.webp" },
+                new BotSticker() { CommandName = "kill", Url = "https://trofim0904.github.io/webp/kill.webp" },
+                new BotSticker() { CommandName = "02", Url = "https://trofim0904.github.io/webp/zerotwo.webp" }
+            };
 
             #region Bot start
 
-            //_client = new TelegramBotClient(args[0]);
-            _client = new TelegramBotClient("1277866234:AAGC5RHjVsy7-UNZfVzmwmPi7lrTgz_CBF4");
+            _client = new TelegramBotClient("1131920122:AAFjNH3kiOA6wUrCu-cfycdprDXOP9GxdFk");
 
             var me = _client.GetMeAsync().Result;
             Console.WriteLine("Bot name: " + me.FirstName);
-            //Console.WriteLine("Token: " + args[0]);
             _commands = new List<Command>();
+
             foreach(BotSticker botSticker in botStickers)
             {
                 _commands.Add(new StickerCommand(botSticker.CommandName, botSticker.Url));
             }
 
-            //{
-            //    new StartCommand(),
-            //    new KillCommand(),
-            //    new ZerotwoCommand()
-
-            //};
+           
             _client.OnMessage += _client_OnMessage;
             _client.StartReceiving();
 
-            //Thread.Sleep(Timeout.Infinite);
+
             #endregion
 
-
-            Console.ReadKey();
+            Thread.Sleep(Timeout.Infinite);
+            //Console.ReadKey();
   
 
 
